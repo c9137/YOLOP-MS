@@ -515,15 +515,6 @@ def smooth_BCE(eps=0.1):  # https://github.com/ultralytics/yolov3/issues/238#iss
     return 1.0 - 0.5 * eps, 0.5 * eps
 
 
-# 看后台进程
-# 空net
-class NetTest(nn.Cell):
-    def __init__(self):
-        super.__init__(NetTest)
-        self.act = ops.Identity()
-
-    def construct(self, x):
-        return self.act(x)
 
 
 
