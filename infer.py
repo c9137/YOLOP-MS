@@ -20,7 +20,7 @@ from src.model_utils.config import config
 
 
 transform = [
-    transforms.ToTensor(),  # 昇思的文档里说这个ToTensor的输出是ndarray
+    transforms.ToTensor(),  
     transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
 ]
 
@@ -174,66 +174,22 @@ def infer_time():
 
 
 if __name__ == "__main__":
-    from src.yolo_dataset import create_bdd_dataset, build_targets
-    # import argparse
-    #
-    # parser = argparse.ArgumentParser()
-    # parser.add_argument('--weights', nargs='+', type=str, default='./weights/my_End-to-end.ckpt', help='model.ckpt path(s)')
-    # parser.add_argument('--source', type=str, default='./inference/images',
-    #                     help='source')  # file/folder   ex:inference/images
-    # parser.add_argument('--img-size', type=int, default=640, help='inference size (pixels)')
-    # parser.add_argument('--conf-thres', type=float, default=0.25, help='object confidence threshold')  # 0.25
-    # parser.add_argument('--iou-thres', type=float, default=0.45, help='IOU threshold for NMS')
-    # parser.add_argument('--save-dir', type=str, default='./runs/inference/output', help='directory to save results')
-    # parser.add_argument('--augment', action='store_true', help='augmented inference')
-    # parser.add_argument('--update', action='store_true', help='update all models')
-    # opt = parser.parse_args()
-    #
-    # # run_train()
-    ms.set_context(mode=ms.GRAPH_MODE, device_target='CPU')
-    # inference(opt)
-
-    ds = create_bdd_dataset(config, config.device_num, config.rank)
-    data_loader = ds.create_tuple_iterator(do_copy=False)
-    steps_per_epoch = ds.get_dataset_size()
-
-    network = MCnet(is_training=True)
-    checkpoint = ms.load_checkpoint('./weights/my_End-to-end.ckpt')
-    rest_checkpoint = ms.load_param_into_net(network, checkpoint, strict_load=True)
-    network = YoloPWithLossCell(network, config)
-    # print(f"rest checkpoint: {rest_checkpoint}")
-    network.set_train()
-
-    # g_data = 0
-    # g_tcls = 0
-    # g_tbox = 0
-    # g_indices = 0
-    # g_anch = 0
-    for step_idx, data in enumerate(data_loader):
-        # g_data = data
-        t1 = time.time()
-        # input, labels_det, ture_labels_num, seg_label, lane_label, paths, shapes = data
-        tcls, tbox, indices, anch = build_targets(config, data[1], data[2])
-        loss = network(data[0], data[1], data[3], data[4], data[6], tcls, tbox, indices, anch)
-        t2 = time.time()
-        # g_tcls = tcls
-        # g_tbox = tbox
-        # g_indices = indices
-        # g_anch = anch
-        print(f'iter{step_idx+1}/{steps_per_epoch}, load data: {(t2 - t1) * 1000} ms')  # 8.124994277954102 ms
-
-    # network = MCnet(is_training=True)
-    # checkpoint = ms.load_checkpoint('./weights/my_End-to-end.ckpt')
-    # rest_checkpoint = ms.load_param_into_net(network, checkpoint, strict_load=True)
-    # network = YoloPWithLossCell(network, config)
-    # # print(f"rest checkpoint: {rest_checkpoint}")
-    # network.set_train()
-
-    # for i in range(100):
-    #     t1 = time.time()
-    #     loss = network(g_data[0], g_data[1], g_data[3], g_data[4], g_data[6], g_tcls, g_tbox, g_indices, g_anch)  # Ascend:77ms  CPU:2251ms
-    #     t2 = time.time()
-    #     print(f'per iter:{(t2 - t1) * 1000} ms')
+    import argparse
+    
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--weights', nargs='+', type=str, default='./weights/my_End-to-end.ckpt', help='model.ckpt path(s)')
+    parser.add_argument('--source', type=str, default='./inference/images',
+                        help='source')  # file/folder   ex:inference/images
+    parser.add_argument('--img-size', type=int, default=640, help='inference size (pixels)')
+    parser.add_argument('--conf-thres', type=float, default=0.25, help='object confidence threshold')  # 0.25
+    parser.add_argument('--iou-thres', type=float, default=0.45, help='IOU threshold for NMS')
+    parser.add_argument('--save-dir', type=str, default='./runs/inference/output', help='directory to save results')
+    parser.add_argument('--augment', action='store_true', help='augmented inference')
+    parser.add_argument('--update', action='store_true', help='update all models')
+    opt = parser.parse_args()
+    
+    ms.set_context(mode=ms.GRAPH_MODE, device_target=config.device_target, device_id=config.divice_id)
+    inference(opt)
 
 
 
