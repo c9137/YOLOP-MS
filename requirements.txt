@@ -1,0 +1,10 @@
+matplotlib~=3.5.1
+opencv-python~=4.6.0.66
+numpy~=1.21.6
+torch~=1.8.2+cpu
+yaml~=0.2.5
+pyyaml~=6.0
+scipy~=1.7.3
+tqdm~=4.64.0
+yacs~=0.1.6
+pycocotools~=2.0.4

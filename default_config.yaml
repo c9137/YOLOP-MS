@@ -1,0 +1,159 @@
+# Builtin Configurations(DO NOT CHANGE THESE CONFIGURATIONS unless you know exactly what you are doing)
+device_target: "Ascend"
+
+# ==============================================================================
+# from YOLOP options
+SINGLE_CLS: True
+MAX_BOXES: 50
+DATASET_DATAROOT: '/mass_store/dataset/bdd/bdd100k/images/100k'       # the path of images folder
+DATASET_LABELROOT: '/mass_store/dataset/bdd/bdd100k/det_annotations'      # the path of det_annotations folder
+DATASET_MASKROOT: '/mass_store/dataset/bdd/bdd100k/da_seg_annotations'                # the path of da_seg_annotations folder
+DATASET_LANEROOT: '/mass_store/dataset/bdd/bdd100k/ll_seg_annotations'               # the path of ll_seg_annotations folder
+
+# DATASET_DATAROOT: '/home/caijiajun/data/bdd_2684/images'       # the path of images folder
+# DATASET_LABELROOT: '/home/caijiajun/data/bdd_2684/det_annotations'      # the path of det_annotations folder
+# DATASET_MASKROOT: '/home/caijiajun/data/bdd_2684/da_seg_annotations'                # the path of da_seg_annotations folder
+# DATASET_LANEROOT: '/home/caijiajun/data/bdd_2684/ll_seg_annotations'               # the path of ll_seg_annotations folder
+
+DATASET_TRAIN_SET: 'train'
+DATASET_TEST_SET: 'val'
+DATASET_DATA_FORMAT: 'jpg'
+DATASET_FLIP: True
+DATASET_SCALE_FACTOR: 0.25
+DATASET_ROT_FACTOR: 10
+DATASET_TRANSLATE: 0.1
+DATASET_SHEAR: 0.0
+DATASET_COLOR_RGB: False
+DATASET_HSV_H: 0.015  # image HSV-Hue augmentation (fraction)
+DATASET_HSV_S: 0.7  # image HSV-Saturation augmentation (fraction)
+DATASET_HSV_V: 0.4  # image HSV-Value augmentation (fraction)
+DATASET_ORG_IMG_SIZE: [720, 1280]
+LOSS_LOSS_NAME: ""
+LOSS_MULTI_HEAD_LAMBDA: ""
+LOSS_FL_GAMMA: 0.0  # focal loss gamma
+LOSS_CLS_POS_WEIGHT: 1.0  # classification loss positive weights
+LOSS_OBJ_POS_WEIGHT: 1.0  # object loss positive weights
+LOSS_SEG_POS_WEIGHT: 1.0  # segmentation loss positive weights
+LOSS_BOX_GAIN: 0.05  # box loss gain
+LOSS_CLS_GAIN: 0.5  # classification loss gain
+LOSS_OBJ_GAIN: 1.0  # object loss gain
+LOSS_DA_SEG_GAIN: 0.2  # driving area segmentation loss gain
+LOSS_LL_SEG_GAIN: 0.2  # lane line segmentation loss gain
+LOSS_LL_IOU_GAIN: 0.2  # lane line iou loss gain
+
+# Train options
+
+per_batch_size: 16
+pretrained_checkpoint: ""
+output_dir: "./output"
+
+lr_scheduler: "cosine_annealing"
+lr: 0.01
+lr_epochs: "220,250"
+lr_gamma: 0.1
+eta_min: 0.0
+T_max: 300         # please set 320 when run on 1p
+max_epoch: 300     # please set 320 when run on 1p
+warmup_epochs: 20  # please set 4 when run on 1p
+weight_decay: 0.0005
+momentum: 0.9
+loss_scale: 1024
+label_smooth: 0
+label_smooth_factor: 0.1
+log_interval: 1
+ckpt_path: "outputs/"
+is_distributed: 0
+bind_cpu: True
+device_num: 1
+rank: 0
+group_size: 1
+need_profiler: 0
+resize_rate: 10
+filter_weight: False
+
+# Eval options
+log_path: "outputs/"
+eval_nms_thresh: 0.6
+ignore_threshold: 0.7
+test_ignore_threshold: 0.001
+multi_label: True
+multi_label_thresh: 0.1
+
+# Export options
+device_id: 4
+
+# Other default config
+hue: 0.015
+saturation: 1.5
+value: 0.4
+jitter: 0.3
+
+num_classes: 1
+max_box: 150
+
+# h->w
+anchor_scales: [[3, 9],
+                [5, 11],
+                [4, 20],
+                [7, 18],
+                [6, 39],
+                [12, 31],
+                [19, 50],
+                [38, 81],
+                [68, 157]]
+
+out_channel: 18  # 3 * (num_classes + 5)
+
+
+---
+
+# Help description for each configuration
+# Train options
+#data_dir: "Train dataset directory."
+#per_batch_size: "Batch size for Training."
+#pretrained_backbone: "The ckpt file of CspDarkNet53."
+#resume_yolov5: "The ckpt file of YOLOv5, which used to fine tune."
+#pretrained_checkpoint: "The ckpt file of YOLOv5CspDarkNet53."
+#lr_scheduler: "Learning rate scheduler, options: exponential, cosine_annealing."
+#lr: "Learning rate."
+#lr_epochs: "Epoch of changing of lr changing, split with ','."
+#lr_gamma: "Decrease lr by a factor of exponential lr_scheduler."
+#eta_min: "Eta_min in cosine_annealing scheduler."
+#T_max: "T-max in cosine_annealing scheduler."
+#max_epoch: "Max epoch num to train the model."
+#warmup_epochs: "Warmup epochs."
+#weight_decay: "Weight decay factor."
+#momentum: "Momentum."
+#loss_scale: "Static loss scale."
+#label_smooth: "Whether to use label smooth in CE."
+#label_smooth_factor: "Smooth strength of original one-hot."
+#log_interval: "Logging interval steps."
+#ckpt_path: "Checkpoint save location."
+#ckpt_interval: "Save checkpoint interval."
+#is_save_on_master: "Save ckpt on master or all rank, 1 for master, 0 for all ranks."
+#is_distributed: "Distribute train or not, 1 for yes, 0 for no."
+#bind_cpu: "Whether bind cpu when distributed training."
+#device_num: "Device numbers per server"
+#rank: "Local rank of distributed."
+#group_size: "World size of device."
+#need_profiler: "Whether use profiler. 0 for no, 1 for yes."
+#resize_rate: "Resize rate for multi-scale training."
+#ann_file: "path to annotation"
+#each_multiscale: "Apply multi-scale for each scale"
+#labels: "the label of train data"
+#multi_label: "use multi label to nms"
+#multi_label_thresh: "multi label thresh"
+#
+## Eval options
+#pretrained: "model_path, local pretrained model to load"
+#log_path: "checkpoint save location"
+#ann_val_file: "path to annotation"
+#
+## Export options
+#device_id: "Device id for export"
+#batch_size: "batch size for export"
+#testing_shape: "shape for test"
+#ckpt_file: "Checkpoint file path for export"
+#file_name: "output file name for export"
+#file_format: "file format for export"
+#result_files: 'path to 310 infer result floder'
